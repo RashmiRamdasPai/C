@@ -53,7 +53,7 @@ struct Time addTimes(const struct Time *T1,const struct Time *T2){
         result.second %=60;
     }
     if(result.minute >=60){
-        result.hour += result.second/60;
+        result.hour += result.minute/60;
         result.minute %=60;
     }
     if(result.hour >=24){
