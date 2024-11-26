@@ -102,7 +102,7 @@ int main() {
          for(int i=pos;i<=*n;i++)
              *(p+i)=*(p+i+1);
             
-             (n)--;
+             (*n)--;
      }
      int search_by_key(int *p,int* n,int key){
          for(int i=0;i<*n;i++){
