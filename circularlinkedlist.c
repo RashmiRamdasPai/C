@@ -14,7 +14,7 @@ void display(Node header);
 void deleteFront(Node header);
 void deleteRear(Node header);
 void deleteBykey(Node header,int key);
-void insertAtPosition(Node header,int position,int data);
+void insertAtPosition(Node header,int data,int position);
 void deleteAtPosition(Node header,int position);
 void searchbykey(Node header,int key);
 void reverse(Node header);
@@ -109,28 +109,38 @@ void deleteByKey(Node header, int key) {
     printf("Key not found\n");
 }
 void insertAtPosition(Node header, int data, int position) {
+    Node newNode = createNode(data);
+    if(position==1 && header->next==header){
+        header->next=newNode;
+        newNode->next=header;
+        count++;
+        return;
+    }
     if (position <= 0 || position>count+1) {
         printf("Invalid position\n");
         return;
     }
+    if(position==1){
+        newNode->next=header->next;
+        header->next=newNode;
+        count++;
+        return;
+    }
 
-    Node newNode = createNode(data);
+    
     Node temp = header->next;
     int i = 1;
 
-    while (temp != header && i < position) {
+    while (i < position-1) {
         temp = temp->next;
         i++;
     }
 
-    if (i == position) {
+  
         newNode->next = temp->next;
         temp->next = newNode;
         count++;
-    } else {
-        printf("Position out of range\n");
-        free(newNode);
-    }
+  
 }
 void deleteAtPosition(Node header, int position) {
     if (header->next == header) { // If the list is empty
@@ -249,7 +259,7 @@ int main() {
     header->next = header; // Initially points to itself (empty list)
 
     int choice, data, position, key;
-    Node* foundNode;
+   
 
     do {
         printf("\nMenu:\n");
@@ -287,8 +297,8 @@ int main() {
                    deleteByKey(header,key);
                   break;
             case 6:printf("\n Enter the position and data to be inserted");
-                   scanf("%d %d",&position,&key);
-                   insertAtPosition( header,  position,  data);
+                   scanf("%d %d",&position,&data);
+                   insertAtPosition( header,data,position);
                    break;
            case 7:printf("\n Enter the position to be deleted");
            scanf("%d",&position);
@@ -318,4 +328,3 @@ int main() {
             case 13:exit(0);}
         }while(choice!=13);
     }
-
