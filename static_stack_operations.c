@@ -15,8 +15,8 @@ void display(Stack * S);
 
 int main() {
     // Write C code here
-   Stack * S;
-   initStack(S);
+   Stack  S;
+   initStack(&S);
    int choice,value,n;
    for(;;){
        printf("\n Menu \n");
@@ -30,14 +30,14 @@ int main() {
        switch(choice){
            case 1:printf("\n Enter the value to insert into stack");
                   scanf("%d",&value);
-                  push(S,value);
+                  push(&S,value);
                   break;
-            case 2:value = pop(S);
+            case 2:value = pop(&S);
                  printf("\n Popped Value is %d",value);
                  break;
-            case 3:peek(S);
+            case 3:peek(&S);
                   break;
-            case 4:display(S);
+            case 4:display(&S);
                   break;
             case 5:exit(0);
             default:printf("\n Invalid Choice");
