@@ -63,7 +63,7 @@ int main() {
            printf("\n Stack is Empty");
            return;
        }
-       for(int i=0;i<= (S->top);i++);
+       for(int i=0;i<= (S->top);i++)
           printf("%d",S->arr[i]);
    }
    void resizeStack(Stack * S){
