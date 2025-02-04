@@ -1,139 +1,172 @@
 #include<stdio.h>
 #include<stdlib.h>
-int size;
-
-struct Queue{
-    int *queue;
+struct dequeue{
+    int *arr;
     int front;
     int rear;
-}Q;
-void pushrear(int val){
-    if(Q.rear==size-1 && Q.front==0||Q.front>Q.rear){
-        printf("\n Queue is full,Reallocating Memory");
-        size++;
-        Q.queue=(int*)realloc(Q.queue,size*sizeof(int)); 
-    }
-    if(Q.front==-1 && Q.rear==-1){
-        Q.front=Q.rear=0;
-    }
-    else if(Q.rear==size-1){
-        Q.rear=0;
-    }
-      else
-        Q.rear++;
-        *(Q.queue+Q.rear)=val;
-}
-void pushfront(int val){
-     if(Q.rear==size-1 && Q.front==0||Q.front>Q.rear){
-        printf("\n Queue is full");
-       printf("\n Reallocating the memory");
-       size++;
-       Q.queue=(int *)realloc(Q.queue,size*sizeof(int));
-    }
-    if(Q.front==-1 ){
-        Q.front=Q.rear=0;
-    }
-    else if(Q.front==0)
-      Q.front=size-1;
-    else
-      Q.front--;
-      *(Q.queue+Q.front)=val;
-}
-void popfront(){
-     if(Q.rear==-1 && Q.front==-1){
-        printf("\n Queue is Empty");
-        return;
-    }
-    if(Q.front==Q.rear){
-        printf("Deleted element is %d ",*(Q.queue+Q.front));
-        Q.front=Q.rear=-1;
-}
-else if(Q.front==size-1){
-     printf("Deleted element is %d ",*(Q.queue+Q.front));
-     Q.front=0;
-     
-}
-else{
-   printf("Deleted element is %d ",*(Q.queue+Q.front));
-     Q.front++;
-      
-}
-}
-
-void poprear(){
-     if(Q.rear==-1 && Q.front==-1){
-        printf("\n Queue is Empty");
-        return;
-    }
-    if(Q.front==Q.rear){
-        printf("Deleted element is %d ",*(Q.queue+Q.rear));
-        Q.front=Q.rear=-1;
-}
-else if(Q.rear==0){
-     printf("Deleted element is %d ",*(Q.queue+Q.rear));
-     Q.rear=size-1;
-     
-}
-else{
-   printf("Deleted element is %d ",*(Q.queue+Q.rear));
-     Q.rear--;
-      
-}
-}  
-void display(){
-    int i;
-    if(Q.front==-1 && Q.rear==-1){
-        printf("\n Queue is Empty");
-        return;
-    }
-    if(Q.front<=Q.rear){
-        for(i=Q.front;i<=Q.rear;i++){
-            printf("%d ",*(Q.queue+i));
-        }
-    }
-    else{
-        for(i=Q.front;i<=size-1;i++){
-            printf("%d ",*(Q.queue+i));
-        for(i=0;i<=Q.rear;i++)
-        printf("%d ",*(Q.queue+i));
-        } 
-    }
-    }
-    void main(){
-        int val,choice;
-        Q.front=Q.rear=-1;
-        printf("\n Enter the size");
-        scanf("%d",&size);
-        printf("Menu \n1.Push-front \n 2.Push-rear \n 3.Pop-front \n 4.Pop-rear \n 5.Display \n 6.EXIT");
-        Q.queue=(int *)malloc(size*sizeof(int));
-        for(;;){
-            printf("\n Enter your choice");
-            scanf("%d",&choice);
-            switch(choice){
-                case 1:printf("\n Enter the element to be inserted");
-                     scanf("%d",&val);
-                     pushfront(val);
-                     break;
-                case 3:popfront();break;
-                case 2:printf("\n Enter the element to be inserted");
-                     scanf("%d",&val);
-                     pushrear(val);break;
-                case 4:poprear();break;
-                case 5:display();break;
-                case 6:printf("\n Thankyou");
-                       exit(0);
-                default:printf("\n You have entered invalid choice");
+    int size;
+};
+typedef struct dequeue DQ;
+void ins_rear(DQ * dq){
+     if((dq->rear+1)%dq->size==dq->front){
+        int n = dq->size;
+        dq->size=dq->size*2;
+      dq->arr=(int *)realloc(dq->arr,dq->size*(sizeof(int)));
+      if(dq->arr==NULL){
+        printf("\nmemory failed");
+        exit(0);
+      }
+      printf("\nReallocated successfully");
+      if(dq->front>dq->rear){
+        for (int i = 0; i < dq->front; i++) {
+                dq->arr[i + n] = dq->arr[i]; // Move wrapped elements to the new position
             }
+            dq->rear += n; // Update rear to the correct position
+        }
+        /*int i=dq->front;int j=0;
+        while(i!=dq->rear){
+            dq->arr[j]=dq->arr[i];
+            j++;i++;
+        }
+        dq->arr[j]=dq->arr[i];
+        dq->front=0;
+        dq->rear=dq->size-1;
+      }*/
+    }
+    if(dq->front==-1||dq->rear==-1){
+         dq->arr = (int *)malloc(dq->size * sizeof(int));
+if (dq->arr == NULL) {
+    printf("Memory allocation failed!");
+    exit(0);
+}
+        dq->front++;
+        dq->rear++;
+         printf("\nEnter item to be inserted:");
+    int item;
+    scanf("%d",&item);
+    dq->arr[dq->rear]=item;
+    return;
+    }
+    printf("\nEnter item to be inserted:");
+    int item;
+    scanf("%d",&item);
+    dq->rear=(dq->rear+1)%dq->size;
+    dq->arr[dq->rear]=item;
+    return;
+}
+void del_front(DQ * dq){
+    if(dq->front==-1){
+        printf("\nQueue empty");
+        return;
+    }
+    if(dq->front==dq->rear){
+    dq->front=dq->rear=-1;
+    return;
+    }
+    dq->front=(dq->front+1)%dq->size;
+    return;
+
+}
+void display(DQ * dq){
+    if(dq->front==-1){
+        printf("\nQueue empty");
+        return;
+    }
+    int i=dq->front;
+    while(i!=dq->rear){
+        printf("%d\t",dq->arr[i]);
+        i=(i+1)%dq->size;
+    }
+       printf("%d\t",dq->arr[i]);
+}
+void ins_front(DQ * dq){
+     if(dq->front==0){
+        printf("\ncannot insert at front\n");
+        return;
+    }
+    if(dq->front==-1||dq->rear==-1){
+         dq->arr = (int *)malloc(dq->size * sizeof(int));
+if (dq->arr == NULL) {
+    printf("Memory allocation failed!");
+    exit(0);
+}
+        dq->front++;
+        dq->rear++;
+         printf("\nEnter item to be inserted:");
+    int item;
+    scanf("%d",&item);
+    dq->arr[dq->rear]=item;
+    return;
+    }
+    printf("\nEnter the item to be inserted:\n");
+    int item;
+    scanf("%d",&item);
+    dq->front=(dq->front-1+dq->size)%dq->size;
+    dq->arr[dq->front]=item;
+    return;
+}
+void del_rear(DQ * dq){
+    if(dq->rear==-1){
+        printf("\nQueue empty\n");
+        return;
+    }
+    if(dq->front==dq->rear){
+        dq->front=-1;
+        dq->rear=-1;
+    }
+    int item;
+item=dq->arr[dq->rear];
+    dq->rear=(dq->rear-1+dq->size)%dq->size;
+    return;
+}
+void que_front(DQ * dq){
+    if(dq->front==-1){
+        printf("\nQueue empty");
+        return;
+    }
+    printf("queue front----%d",dq->arr[dq->front]);
+    return;
+}
+void que_rear(DQ * dq){
+    if(dq->front==-1){
+        printf("\nQueue empty");
+        return;
+    }
+    printf("queue rear----%d",dq->arr[dq->rear]);
+    return;
+}
+
+
+
+void main(){
+    DQ dq;
+    dq.front=dq.rear=-1;
+    int choice;
+    int n;
+    printf("\nEnter the size of the array:");
+    scanf("%d",&n);
+    dq.size=n;
+   
+    for(;;){
+        printf("\nEnter your choice::");
+        scanf("%d",&choice);
+        switch(choice){
+            case 1:ins_rear(&dq);
+                   break;
+            case 2:ins_front(&dq);
+                   break;
+            case 3:del_front(&dq);
+                   break;  
+            case 4:del_rear(&dq);
+                   break;
+            case 5:display(&dq);
+                   break;
+            case 6:que_front(&dq);
+                   break;
+            case 7:que_rear(&dq);
+                   break;
+              
+                   
         }
     }
-
-
-
-
-
-
-
-
-
-
-
+} 
